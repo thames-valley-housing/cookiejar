@@ -107,7 +107,10 @@ module CookieJar
       host = to_domain hostname
       host = host.downcase
       match = BASE_HOSTNAME.match host
-      match[1] if match
+
+      return unless match
+
+      match[1] if PublicSuffix.valid?(match[1]) || match[1] == 'local'
     end
 
     # Compute the base of a path, for default cookie path assignment
@@ -161,11 +164,15 @@ module CookieJar
     def self.compute_search_domains_for_host(host)
       host = effective_host host
       result = [host]
-      unless host =~ IPADDR
+
+      return result if IPADDR.match?(host)
+
+      loop do
         result << ".#{host}"
-        base = hostname_reach host
-        result << ".#{base}" if base
+        host = hostname_reach(host)
+        break unless host
       end
+
       result
     end
 

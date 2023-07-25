@@ -25,4 +25,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 3.0'
   s.add_development_dependency 'yard',  '~> 0.9.20'
   s.add_development_dependency 'bundler', '>= 0.9.3'
+
+  s.add_runtime_dependency 'public_suffix'
 end
